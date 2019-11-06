@@ -1,3 +1,26 @@
+<?php 
+include ("connection.php");
+                        $res = $conn->query("SELECT 
+                        donations.amount AS amount,
+                        category.type AS type,
+                        organizations.organization_id AS organization_id, organizations.name AS organization_name,
+                        drives.drive_id AS drive_id, drives.name AS drive_name,drives.image AS image, drives.goal AS goal,
+                        drives.description AS description, drives.date_created AS date_created,
+                        donations.amount AS amount
+                        FROM donations
+                        JOIN drives ON donations.drive_id = drives.drive_id
+                        JOIN organizations ON organizations.organization_id = drives.organization_id
+                        JOIN category ON category.type_id=organizations.type_id
+                        WHERE organizations.organization_id='".$_GET['id']."'");
+                        
+                       
+                        // var_dump($res->fetch_array());
+                        //  $row_id= $res->fetch_array();
+                        //  while () {
+                            $row = $res->fetch_array();
+                            var_dump($row);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -95,36 +118,36 @@ include ("services.php");	 ?>
 
 
 <!--picks up the organization session and displays drives of that session -->
-<?php
-if (isset($_SESSION['organization'])) {
 
-
-    $res = $conn->query("SELECT * FROM organizations WHERE organization_id = '".$_SESSION['organization']."'");
-
-while($row_id= $res->fetch_assoc() ){
-$grab = $conn->query("SELECT * FROM drives WHERE organization_id = '".$row_id['organization_id']."'");
-$row = $grab->fetch_assoc();
-while($therow= $row_id){
-    $grabb = $conn->query("SELECT SUM(amount) as amount FROM donations WHERE drive_id = '".$therow['organization_id']."'");
-    $don = $grabb->fetch_assoc();
-    $total=0;
-    $total = $total+ $don['amount'];
-    $perc = round(($don['amount'] / $row["goal"]) * 100);
-
-
-
-                ?>
   <div class="page-header">
         <div class="container">
             <div class="row">
                 <div class="col-12">
-                    <h1><?php 
-				if (isset($_SESSION['organization'])) {
-                 echo   $row_id['name'];
-                    
-                }
-               
-                 ?></h1>
+                    <h1>
+                    <?php 
+                        $res = $conn->query("SELECT 
+                        category.type AS type,
+                        organizations.organization_id AS organization_id, organizations.name AS organization_name,
+                        drives.drive_id AS drive_id, drives.name AS drive_name,drives.image AS image, drives.goal AS goal,
+                        drives.description AS description, drives.date_created AS date_created,
+                        donations.amount AS amount
+                        FROM organizations
+                        JOIN category ON category.type_id=organizations.type_id
+                        JOIN drives ON drives.organization_id = organizations.organization_id
+                        JOIN donations ON drives.drive_id = donations.drive_id
+                        WHERE organizations.organization_id='".$_GET['id']."'");
+                       
+                        // var_dump($res->fetch_array());
+                        //  $row_id= $res->fetch_array();
+                        //  while () {
+                            $row = $res->fetch_array();
+                            foreach ($row as $key => $value) {
+                                var_dump($row[$key]['organization_name']);
+                            
+                         $grab = $conn->query("SELECT * FROM drives WHERE organization_id = '".$_GET['id']."'");
+                        //  echo   $row['organization_name'];
+                     ?>
+                 </h1>
                 </div><!-- .col -->
             </div><!-- .row -->
         </div><!-- .container -->
@@ -134,73 +157,80 @@ while($therow= $row_id){
         <div class="container">
             
             <div class="row">
+            <?php
+                    
+                        // $grabb = $conn->query("SELECT SUM(amount) as amount FROM donations WHERE drive_id = '".$_GET['id']."'");
+                        // while ($don = $grabb->fetch_assoc()) {
+                            $total=0;
+                        $total = $total+ $row['amount'];
+                        $perc = round(($row['amount'] / $row["goal"]) * 100);
+                        echo '
+                        <div class="col-12 col-lg-6">
+                        <div class="cause-wrap d-flex flex-wrap justify-content-between">
+                            <figure class="m-0">
+                            <img height="200" width="200" src="http://localhost/thecharity/uploads/'.$row['image'].'"/>
+                            </figure>
+    
+                            <div class="cause-content-wrap">
+                                <header class="entry-header d-flex flex-wrap align-items-center">
+                                    <h3 class="entry-title w-100 m-0"><a >'.$row["drive_name"].'</a></h3>
+    
+                                    <div class="posted-date">
+                                        <a >Active from: '.$row["date_created"].'</a>
+                                    </div><!-- .posted-date -->
+    
+                                    <div class="cats-links">
+                                        <a >Category:
+                                         <!--display name of organization in session -->   
+                                            '.$row['type'].'
+                                            </a>
+                                    </div><!-- .cats-links -->
+                                </header><!-- .entry-header -->
+    
+                                <div class="entry-content">
+                                    <p class="m-0">'.$row["description"].'</p>
+                                </div><!-- .entry-content -->
+    
+                                <div class="entry-footer mt-5">
+                                    <a href="donation.php" class="btn gradient-bg mr-2">Donate Now</a>
+                                </div><!-- .entry-footer -->
+                            </div><!-- .cause-content-wrap -->
+    
+                            <div class="fund-raised w-100">
+                                <div class="featured-fund-raised-bar barfiller">
+                                    <div class="tipWrap">
+                                        <span class="tip"></span>
+                                    </div><!-- .tipWrap -->
+    
+                                    <span class="fill" data-percentage="<?php echo $perc; ?>">
+    
+    
+                                    </span>
+                                </div><!-- .fund-raised-bar -->
+    
+                                <div class="fund-raised-details d-flex flex-wrap justify-content-between align-items-center">
+                                    <div class="fund-raised-total mt-4">
+                                            echo $total;	
+                                    </div><!-- .fund-raised-total -->
+    
+                                    <div class="fund-raised-goal mt-4">
+                                        Goal: Ksh <?php echo $row["goal"]; ?>
+                                    </div><!-- .fund-raised-goal -->
+                                </div><!-- .fund-raised-details -->
+                            </div><!-- .fund-raised -->
+                        </div><!-- .cause-wrap -->
+                    </div><!-- .col -->
+                        ';
+                        }
+                        
+                    // }
+                  
+
+
+
+                ?>
 			
-                <div class="col-12 col-lg-6">
-                    <div class="cause-wrap d-flex flex-wrap justify-content-between">
-                        <figure class="m-0">
-                        <?php     echo "<img src=\"".$row['image']."\">"; ?>
-                        </figure>
-
-                        <div class="cause-content-wrap">
-                            <header class="entry-header d-flex flex-wrap align-items-center">
-                                <h3 class="entry-title w-100 m-0"><a ><?php echo $row["name"]; ?></a></h3>
-
-                                <div class="posted-date">
-                                    <a >Active from: <?php echo $row["date_created"]; ?></a>
-                                </div><!-- .posted-date -->
-
-                                <div class="cats-links">
-                                    <a >Category:
-                                     <!--display name of organization in session -->   
-                                        <?php 
-                                        if (isset($_SESSION['organization'])) {
-                                        echo   $row_id['type'];
-                                            
-                                        }
-                                    
-                                        ?></a>
-                                </div><!-- .cats-links -->
-                            </header><!-- .entry-header -->
-
-                            <div class="entry-content">
-                                <p class="m-0"><?php echo $row["description"]; ?></p>
-                            </div><!-- .entry-content -->
-
-                            <div class="entry-footer mt-5">
-                                <a href="donation.php" class="btn gradient-bg mr-2">Donate Now</a>
-                            </div><!-- .entry-footer -->
-                        </div><!-- .cause-content-wrap -->
-
-                        <div class="fund-raised w-100">
-                            <div class="featured-fund-raised-bar barfiller">
-                                <div class="tipWrap">
-                                    <span class="tip"></span>
-                                </div><!-- .tipWrap -->
-
-                                <span class="fill" data-percentage="<?php echo $perc; ?>">
-
-
-                                </span>
-                            </div><!-- .fund-raised-bar -->
-
-                            <div class="fund-raised-details d-flex flex-wrap justify-content-between align-items-center">
-                                <div class="fund-raised-total mt-4">
-                                    Raised: Ksh  <?php
-									
-                                    echo "<tr><th colspan='2'> </th><th>Ksh ".$total."</th><tr>";	
-                              break;
-                                   }
-
-                                    ?>
-                                </div><!-- .fund-raised-total -->
-
-                                <div class="fund-raised-goal mt-4">
-                                    Goal: Ksh <?php echo $row["goal"]; ?>
-                                </div><!-- .fund-raised-goal -->
-                            </div><!-- .fund-raised-details -->
-                        </div><!-- .fund-raised -->
-                    </div><!-- .cause-wrap -->
-                </div><!-- .col -->
+               
                 </div><!-- .row -->
         </div><!-- .container -->
     </div><!-- .featured-cause -->
@@ -210,10 +240,8 @@ while($therow= $row_id){
                 
                 <?php
  
-} 
  
 
-}
 $conn->close();
 ?>
              				

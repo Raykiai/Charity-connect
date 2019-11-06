@@ -1,4 +1,41 @@
 
+<?php
+include ("connection.php");
+include ("services.php");
+       
+    // $result = $conn->query("SELECT * FROM users WHERE user_id");
+
+    // if (isset($_POST["add_org"])) {
+    // // Get image name
+    // $image = $_FILES['pic']['name'];
+    // // image file directory
+    // $target = "images/".basename($image);
+    // $sql = "INSERT INTO organizations (user_id, name, type_id, pic, description, country, city, contact, email) 
+    // VALUES ('".$_SESSION['uid']."', '".$_POST['name']."', '".$_POST['type_id']."', '".$_FILES['image']['name']."', '".$_POST['description']."', '".$_POST['country']."', '".$_POST['city']."', '".$_POST['contact']."', '".$_POST['email']."' )";
+    // var_dump($conn->query($sql));
+    // die();
+    // if ($conn->query($sql) === TRUE) {
+    //     if (move_uploaded_file($_FILES['image']['tmp_name'], $target)) {
+    //         $msg = "Image uploaded successfully";
+    //         $_SESSION['update_con'] = "organization added successfully";
+
+    //     }else{
+    //         $msg = "Failed to upload image";
+    //     }
+        
+    //     die();
+    // } else{
+    //     $_SESSION['update_fail'] = "Sorry. There was an error";
+        
+    //     die();
+    // }
+
+    // $conn->close();
+    // }
+
+?>
+
+
 <!DOCTYPE html>
 <html >
 <head>
@@ -27,11 +64,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="single-page contact-page">
-    <?php
-include("connection.php");
-include ("services.php");
-          ?>
-
 <header class="site-header">
 <div class="top-header-bar">
         <div class="container">
@@ -112,55 +144,32 @@ include ("services.php");
 
     <div class="contact-page-wrap" >
         <div class="container">
-
-        <?php
-        $result = $conn->query("SELECT * FROM users WHERE user_id");
-
-        if (isset($_POST["add_org"])) {
-        $sql = "INSERT INTO organizations (user_id, name, type, pic, description, country, city, contact, email) 
-        VALUES ('".$_SESSION['uid']."', '".$_POST['name']."', '".$_POST['type']."', '".$_POST['pic']."', '".$_POST['description']."', '".$_POST['country']."', '".$_POST['city']."', '".$_POST['contact']."', '".$_POST['email']."' )";
         
-        if ($conn->query($sql) === TRUE) {
-            $_SESSION['update_con'] = "organization added successfully";
-           
-            die();
-        } else{
-            $_SESSION['update_fail'] = "Sorry. There was an error";
-            
-            die();
-        }
-        
-        $conn->close();
-        }
-        
-        ?>
 
 
-
-
-                <div class="col-12 col-lg-7">
-                    <form class="contact-form" action="add_organizations.php" method="POST" >
+        <div class="col-12 col-lg-7">
+            <form class="contact-form" action="add_organizations.php" method="POST" enctype="multipart/form-data">
  
-<?php
- if (isset($_SESSION['update_con'])) {
-            echo " <div class=\"alert alert-success\" role=\"alert\" > ".$_SESSION['update_con']. "</div>";
-            unset($_SESSION['update_con']);
-}
-            if (isset($_SESSION['update_fail'])) {
-    echo  "<div class=\"alert alert-danger\" role=\"alert\"> "  .$_SESSION['update_fail']. "</div>";
-    unset($_SESSION['update_fail']);
-} ?>
+        <?php
+        if (isset($_SESSION['update_con'])) {
+                    echo " <div class=\"alert alert-success\" role=\"alert\" > ".$_SESSION['update_con']. "</div>";
+                    unset($_SESSION['update_con']);
+        }
+                    if (isset($_SESSION['update_fail'])) {
+            echo  "<div class=\"alert alert-danger\" role=\"alert\"> "  .$_SESSION['update_fail']. "</div>";
+            unset($_SESSION['update_fail']);
+        } ?>
 
                         <input type="text" name="name" placeholder="Create Name ">
-                        <label> Category/Type:</label>	<select name="type" class="type"> 
-            <option >Children</option>
-            <option >Educational</option>
-            <option >Health</option>
-            <option >Poverty</option>
-            <option >Community Service</option>
-            <option >Animals</option>
-			<option >Environmental</option>
-			<option></option>
+                        <label> Category/Type:</label>	<select name="type_id" class="type"> 
+            <option value="1">Children</option>
+            <option value="2">Educational</option>
+            <option value="3">Health</option>
+            <option value="4">Poverty</option>
+            <option value="5">Community Service</option>
+            <option value="6">Animals</option>
+			<option value="7">Environmental</option>
+		
 		</select>
                         <input type="file" name="pic" placeholder="Add Image"  required>
                         <input type="text" name="description" placeholder="Give a short description" >
@@ -171,7 +180,7 @@ include ("services.php");
                        
                         <span>
                        
-                        <button class="btn gradient-bg" id="add_org" name="add_org" >Submit details</button>
+                        <button class="btn gradient-bg" id="add_org" type="submit" name="add_org" >Submit details</button>
       
                         	
 						</span>

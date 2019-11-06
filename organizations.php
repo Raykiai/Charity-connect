@@ -90,7 +90,6 @@
                         <span></span>
                         <span></span>
                         <span></span>
-                        <span></span>
                     </div><!-- .hamburger-menu -->
                 </div><!-- .col -->
             </div><!-- .row -->
@@ -110,7 +109,8 @@
 
   
     <?php 
-$sql="SELECT organization_id, name, type, pic, description, country, city, contact, email FROM organizations";
+$sql="SELECT organizations.organization_id, organizations.name, category.type, organizations.pic, organizations.description, organizations.country, organizations.city, organizations.contact, organizations.email FROM organizations
+        JOIN category ON category.type_id=organizations.type_id";
 
 									
 $result = $conn->query($sql);
@@ -118,10 +118,36 @@ $result = $conn->query($sql);
 if($result = mysqli_query($conn, $sql)){
     if(mysqli_num_rows($result) > 0){
          while($row = mysqli_fetch_array($result)){
-
-            
+            echo
+             '
+             <div class="blog_left_sidebar">
+                <article class="blog_item">
+                    <div class="blog_item_img">
+                         <img src="http://localhost/thecharity/uploads/'.$row['pic'].'">
+                    </div>
+                    <div class="blog_details" >
+                    <a class="d-inline-block" href="organization_view.php?id='.$row['organization_id'].'"  >
+                        <h2>'.$row["name"].'</h2></a>
+                            <p>Category: '.$row["type"].'</p>
+                            <p>'.$row["description"].'</p>
+                            <ul class="blog-info-link">
+                                <li><a><i class="far fa-user"></i>'.$row["country"].'</a></li>
+                                <li><a ><i class="far fa-user"></i>'.$row["city"].'</a></li>
+                                <li><a ><i class="far fa-user"></i>'.$row["contact"].'</a></li>
+                                <li><a ><i class="far fa-user"></i>'.$row["email"].'</a></li>
+                            </ul>
+                    </div>
+                </article>
+                </div>
+                </div>
+                                    
+                </div>
+            ';
+         }
+        }
+    }
 ?>
-
+<!-- 
                 <div class="">
               <?php  if (isset($_SESSION['display_fail'])) {
     echo  "<div class=\"alert alert-danger\" role=\"alert\"> "  .$_SESSION['display_fail']. "</div>";
@@ -151,7 +177,7 @@ $organization_id=$row['organization_id'];
                     </a>
 
 
-                        <p>Category: <?php echo $row["type"]; ?></p>
+                        <p>Category: <?php echo $row["type_id"]; ?></p>
                     <p><?php echo $row["description"]; ?></p>
                     <ul class="blog-info-link">
                             <li><a><i class="far fa-user"></i><?php echo $row["country"]; ?></a></li>
@@ -167,26 +193,12 @@ $organization_id=$row['organization_id'];
                 </div>
 							
                       </div>
-                      <?php
-
-                 }        mysqli_free_result($result);
-
-   } else{
-      
-    echo '<div class="sorry" ><div class="pic33"> <img src="images/g.jpg" alt=""/></div>
-
-    <div class="alerter" > <div class="alert alert-primary" role="alert">
-     Sorry. There are currently no Organizations!!
- </div></div>
-  </div> '; 
-   }
-} else{
-   echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
-}
+                     
+ 
 
 
 $conn->close();
-?>
+?> -->
 
   
 <footer class="site-footer">
