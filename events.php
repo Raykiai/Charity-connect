@@ -44,9 +44,10 @@
                     <a style="float: right;" href="dash.php"><?php 
 				if (isset($_SESSION['user'])) {
                     echo "Logged in : ".$_SESSION['user'];
+                  
                 }
                 else{
-                    echo "No User Logged in";
+                    echo "Log in";
                 }
                  ?></a>
                  
@@ -116,7 +117,7 @@ if ($conn->connect_error) {
 }
 
 
-$sql="SELECT name, image, category, description, country, city, location, date_event, email FROM events";
+$sql="SELECT name, image, description, country, city, location, date_event, email FROM events";
 
 									
 $result = $conn->query($sql);
@@ -133,8 +134,8 @@ if($result = mysqli_query($conn, $sql)){
             <div class="row">
                 <div class="col-12 col-lg-8">
                     <div class="news-content">
-                        <a href="#"><img src="images/1.jpg" alt="image"></a>
-                       
+                        <a>  <?php echo ' <img src="http://localhost/thecharity/uploads/'.$row['image'].'">;' ?>
+         </a>
                         <header class="entry-header d-flex flex-wrap justify-content-between align-items-center">
                             <div class="header-elements">
                                 <div class="posted-date"><?php echo $row["date_event"]; ?></div>
@@ -143,7 +144,6 @@ if($result = mysqli_query($conn, $sql)){
                                 <h2 class="entry-title"><a ><?php echo $row["name"]; ?></a></h2>
 
                                 <div class="post-metas d-flex flex-wrap align-items-center">
-                                    <span class="cat-links">in <a ><?php echo $row["category"]; ?></a></span>
                                     <span class="post-author"> <a ><?php echo $row["country"]; ?></a></span>
                                     <span class="post-comments"><a ><?php echo $row["city"]; ?></a></span>
                                     <span class="post-comments"><a >Location</a></span>
@@ -157,9 +157,7 @@ if($result = mysqli_query($conn, $sql)){
                         <div class="entry-content">
                     <p><?php echo $row["description"]; ?></p>       
                     </div>
-                    <footer class="entry-footer">
-                            <a href="#" class="btn gradient-bg">Like</a>
-                        </footer>
+                  
                     <?php
 
 }        mysqli_free_result($result);

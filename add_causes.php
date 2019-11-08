@@ -111,18 +111,27 @@
     <div class="contact-page-wrap">
         <div class="container">
 <!--Upload info of new created drive -->
-        <?php
-        $result = $conn->query("SELECT * FROM users WHERE user_id");
+        <!-- <?php
+    
+        $result = $conn->query("SELECT * FROM users WHERE '".$_SESSION['uid']."'");
 
         if (isset($_POST["add_cause"])) {
+            $image = $_FILES['image']['name'];
+            $target = "uploads/".basename($image);
         $sql = "INSERT INTO drives (user_id, organization_id, name, image, goal, description) 
-        VALUES ('".$_SESSION['uid']."','".$_POST['organization_id']."', '".$_POST['name']."', '".$_POST['image']."', '".$_POST['goal']."', '".$_POST['description']."')";
+        VALUES ('".$_SESSION['uid']."','".$_POST['organization_id']."', '".$_POST['name']."', '".$_FILES['image']['name']."', '".$_POST['goal']."', '".$_POST['description']."')";
         
         if ($conn->query($sql) === TRUE) {
-            $_SESSION['cause_con'] = "Cause added successfully";
+            if( move_uploaded_file($_FILES['image']['tmp_name'], $target)){
+                $msg = "Image uploaded successfully";
+                $_SESSION['cause_con'] = "Cause added successfully";
+                
+            }
+            
        
-            die();
+            
         } else{
+            
             $_SESSION['cause_fail'] = "Sorry. There was an error";
           
             die();
@@ -131,10 +140,10 @@
         $conn->close();
         }
         
-        ?>
+        ?> -->
 
             <div class="col-12 col-lg-7">
-                <form class="contact-form" action="add_causes.php" method="POST">
+                <form class="contact-form" action="services.php" method="POST">
                         <!-- Display message if the records are uploaded successfully -->
                         <?php
                     if (isset($_SESSION['cause_con'])) {
@@ -147,18 +156,16 @@
                     } ?>
 
                     <input type="text" name="name" placeholder="Name of fund raiser ">
-                  <label>Under which organization: </label><select name="organization_id" class="type">
+                  <label>Organization responsible: </label><select name="organization_id" class="type">
 
                   <!-- Display organizations available under logged in user -->
-                   <?php
-                   if(isset($_SESSION['uid'])){
-                       $user = $conn->query("SELECT * FROM users WHERE user_id = '".$_SESSION['uid']."'");
-                    
-                            while($myuser = $user->fetch_assoc()){
-                   $pick= $conn->query("SELECT * FROM organizations WHERE '".$myuser['user_id']."'");
-                  $rowpick = $pick->fetch_assoc();
-                  
-                   ?> 
+                    <?php
+                    if(isset($_SESSION['uid'])){
+                
+                        $user = $conn->query("SELECT * FROM organizations WHERE user_id = '".$_SESSION['uid']."'");
+                        while($rowpick = $user->fetch_assoc()){
+                       
+                    ?> 
                    
                         <!--Disaplay name of organizations in options under this logged in user
                                 while picking up organization_id as value -->

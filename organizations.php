@@ -45,9 +45,10 @@
                         <a style="float: right;" href="dash.php"><?php 
 				if (isset($_SESSION['user'])) {
                     echo "Logged in : ".$_SESSION['user'];
+                  
                 }
                 else{
-                    echo "No User Logged in";
+                    echo "Log in";
                 }
                  ?></a>
                  
@@ -106,7 +107,7 @@
             </div><!-- .row -->
         </div><!-- .container -->
     </div><!-- .page-header -->
-
+<br>
   
     <?php 
 $sql="SELECT organizations.organization_id, organizations.name, category.type, organizations.pic, organizations.description, organizations.country, organizations.city, organizations.contact, organizations.email FROM organizations
@@ -120,21 +121,21 @@ if($result = mysqli_query($conn, $sql)){
          while($row = mysqli_fetch_array($result)){
             echo
              '
-             <div class="blog_left_sidebar">
+             <div style="margin-left:80px; margin-right:80px; border-radius:20px;">
                 <article class="blog_item">
-                    <div class="blog_item_img">
-                         <img src="http://localhost/thecharity/uploads/'.$row['pic'].'">
+                    <div class="blog_item_img" >
+                         <img style="max-width=180px; min-width=100px; max-height:180px; min-height:100px; margin_left:110px;" src="http://localhost/thecharity/uploads/'.$row['pic'].'">
                     </div>
                     <div class="blog_details" >
                     <a class="d-inline-block" href="organization_view.php?id='.$row['organization_id'].'"  >
-                        <h2>'.$row["name"].'</h2></a>
-                            <p>Category: '.$row["type"].'</p>
-                            <p>'.$row["description"].'</p>
+                        <h2 style="font-size:20pt;">'.$row["name"].'</h2></a>
+                            <p style="font-size:12pt;">Category: '.$row["type"].'</p>
+                            <p style="font-size:14pt;">'.$row["description"].'</p>
                             <ul class="blog-info-link">
-                                <li><a><i class="far fa-user"></i>'.$row["country"].'</a></li>
-                                <li><a ><i class="far fa-user"></i>'.$row["city"].'</a></li>
-                                <li><a ><i class="far fa-user"></i>'.$row["contact"].'</a></li>
-                                <li><a ><i class="far fa-user"></i>'.$row["email"].'</a></li>
+                                <li style="font-size:12pt; color:black;"><a><i class="far fa-user"></i>'.$row["country"].'</a></li>
+                                <li style="font-size:12pt; color:black;"><a ><i class="far fa-user"></i>'.$row["city"].'</a></li>
+                                <li style="font-size:12pt; color:black;"><a ><i class="far fa-user"></i>'.$row["contact"].'</a></li>
+                                <li style="font-size:12pt; color:black;"><a ><i class="far fa-user"></i>'.$row["email"].'</a></li>
                             </ul>
                     </div>
                 </article>

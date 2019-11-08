@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="css/swiper.min.css">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dash.css">
 </head>
 <body class="single-page contact-page">
     <?php
@@ -96,7 +96,7 @@
     </div><!-- .nav-bar -->
 </header><!-- .site-header -->
 
-    <div class="page-header">
+<div class="page-header">
         <div class="container">
             <div class="row">
                 <div class="col-12">
@@ -109,27 +109,38 @@
     <div class="contact-page-wrap" >
         <div class="container">
           <!--Upload info of new created event --> 
-          <?php
-        $result = $conn->query("SELECT * FROM users WHERE user_id");
-
-        if (isset($_POST["add_event"])) {
-        $sql = "INSERT INTO events (user_id, organization_id, name, image, category, description, country, city, location, date_event, email) 
-        VALUES ('".$_SESSION['uid']."','".$_POST['organization_id']."', '".$_POST['name']."', '".$_POST['image']."', '".$_POST['category']."', '".$_POST['description']."', '".$_POST['country']."', '".$_POST['city']."', '".$_POST['location']."', '".$_POST['date_event']."', '".$_POST['email']."')";
+          <!-- <?php
         
-        if ($conn->query($sql) === TRUE) {
-            $_SESSION['event_con'] = "Event added successfully";
-       
-            die();
+        if (isset($_POST["add_event"])) {
+            var_dump($_FILES);
+            $pic = $_FILES['image']['name'];
+            $target = "uploads/".basename($pic);
+              $result = $conn->query("SELECT * FROM users WHERE '".$_SESSION['uid']."'");
+
+        $sql = "INSERT INTO events (user_id, organization_id, name, image, description, country, city, location, date_event, email) 
+        VALUES ('".$_SESSION['uid']."','".$_POST['organization_id']."', '".$_POST['name']."', '".$_FILES['image']['name']."', '".$_POST['description']."', '".$_POST['country']."', '".$_POST['city']."', '".$_POST['location']."', '".$_POST['date_event']."', '".$_POST['email']."')";
+        
+        if ($conn->multi_query($sql) === TRUE) {
+            if(move_uploaded_file($_FILES['image']['tmp_name'], $target)){
+                $msg = "Image uploaded successfully";
+                $_SESSION['event_con'] = "Event added successfully";
+            
+            }
+            else{
+                 $_SESSION['event_fail'] = "Sorry. There was an error";
+                
+            }
+        
         } else{
-            $_SESSION['event_fail'] = "Sorry. There was an error";
+           $_SESSION['event_fail'] = "Sorry. There was an error";
+         
           
-            die();
         }
         
         $conn->close();
         }
         
-        ?>                
+        ?>                 -->
 
                 <div class="col-12 col-lg-7">
                     <form class="contact-form" action="services.php" method="POST" >
@@ -146,16 +157,17 @@
 
                                     <input type="text" name="name" placeholder="Name your events ">
                                     <input type="file" name="image" placeholder="Add an Image"  required>
-                        <label>Organization responsible: </label>	<select name="organization_id" class="type"> 
-            <!-- Display organizations available under logged in user -->
-            <?php
-                   if(isset($_SESSION['uid'])){
-                       $user = $conn->query("SELECT * FROM users WHERE user_id = '".$_SESSION['uid']."'");
-                            while($myuser = $user->fetch_assoc()){
-                   $pick= $conn->query("SELECT * FROM organizations WHERE '".$myuser['user_id']."'");
-                  $rowpick = $pick->fetch_assoc();
-                  
-                   ?> 
+
+                                    <span> Organization responsible:</span>	
+                    <select name="organization_id" class="type"> 
+                  <!-- Display organizations available under logged in user -->
+                    <?php
+                    if(isset($_SESSION['uid'])){
+                
+                        $user = $conn->query("SELECT * FROM organizations WHERE user_id = '".$_SESSION['uid']."'");
+                        while($rowpick = $user->fetch_assoc()){
+                       
+                    ?> 
                    
                         <!--Disaplay name of organizations in options under this logged in user
                                 while picking up organization_id as value -->
@@ -172,7 +184,6 @@
                                         }?>
 
                    </select>
-                        
                         <input type="text" name="description" placeholder="Give a brief description" >
 						 <input type="text" name="country" placeholder="Country" >
                          <input type="text" name="city" placeholder="City" >

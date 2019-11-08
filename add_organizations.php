@@ -194,6 +194,8 @@ include ("services.php");
         </div><!-- .container -->
     </div>
 
+    
+
    <footer class="site-footer">
         <div class="footer-widgets">
             <div class="container">

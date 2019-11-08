@@ -1,24 +1,21 @@
-<?php 
-include ("connection.php");
-                        $res = $conn->query("SELECT 
-                        donations.amount AS amount,
-                        category.type AS type,
-                        organizations.organization_id AS organization_id, organizations.name AS organization_name,
-                        drives.drive_id AS drive_id, drives.name AS drive_name,drives.image AS image, drives.goal AS goal,
-                        drives.description AS description, drives.date_created AS date_created,
-                        donations.amount AS amount
-                        FROM donations
-                        JOIN drives ON donations.drive_id = drives.drive_id
-                        JOIN organizations ON organizations.organization_id = drives.organization_id
-                        JOIN category ON category.type_id=organizations.type_id
-                        WHERE organizations.organization_id='".$_GET['id']."'");
-                        
-                       
-                        // var_dump($res->fetch_array());
-                        //  $row_id= $res->fetch_array();
-                        //  while () {
-                            $row = $res->fetch_array();
-                            var_dump($row);
+<?php
+    // include ("connection.php");
+    // $res = $conn->query("SELECT DISTINCT 
+    // organizations.name AS organization_name,drives.name AS drive_name,SUM(donations.amount) AS amount,
+    // category.type AS type, drives.goal AS goal, drives.image AS image, drives.date_created, drives.description
+    // FROM organizations
+    // JOIN drives ON drives.organization_id = organizations.organization_id
+    // JOIN donations ON donations.drive_id = drives.drive_id
+    // JOIN category ON category.type_id = organizations.type_id
+    // WHERE organizations.organization_id='".$_GET['id']."'
+    // GROUP BY drives.drive_id");
+     
+    //   // var_dump($res->fetch_array());
+    //   //  $row_id= $res->fetch_array();
+    //   //  while () {
+    // $row = $res->fetch_all(MYSQLI_ASSOC);
+    // die(print_r($row));
+
 ?>
 
 <!DOCTYPE html>
@@ -125,24 +122,8 @@ include ("services.php");	 ?>
                 <div class="col-12">
                     <h1>
                     <?php 
-                        $res = $conn->query("SELECT 
-                        category.type AS type,
-                        organizations.organization_id AS organization_id, organizations.name AS organization_name,
-                        drives.drive_id AS drive_id, drives.name AS drive_name,drives.image AS image, drives.goal AS goal,
-                        drives.description AS description, drives.date_created AS date_created,
-                        donations.amount AS amount
-                        FROM organizations
-                        JOIN category ON category.type_id=organizations.type_id
-                        JOIN drives ON drives.organization_id = organizations.organization_id
-                        JOIN donations ON drives.drive_id = donations.drive_id
-                        WHERE organizations.organization_id='".$_GET['id']."'");
                        
-                        // var_dump($res->fetch_array());
-                        //  $row_id= $res->fetch_array();
-                        //  while () {
-                            $row = $res->fetch_array();
-                            foreach ($row as $key => $value) {
-                                var_dump($row[$key]['organization_name']);
+                                // echo $row['organization_name'];
                             
                          $grab = $conn->query("SELECT * FROM drives WHERE organization_id = '".$_GET['id']."'");
                         //  echo   $row['organization_name'];
@@ -158,6 +139,21 @@ include ("services.php");	 ?>
             
             <div class="row">
             <?php
+                     $res = $conn->query("SELECT DISTINCT 
+                        organizations.name AS organization_name,drives.name AS drive_name,SUM(donations.amount) AS amount,
+                        category.type AS type, drives.goal AS goal, drives.image AS image, drives.date_created, drives.description
+                        FROM organizations
+                        JOIN drives ON drives.organization_id = organizations.organization_id
+                        JOIN donations ON donations.drive_id = drives.drive_id
+                        JOIN category ON category.type_id = organizations.type_id
+                        WHERE organizations.organization_id='".$_GET['id']."'
+                        GROUP BY drives.drive_id");
+                       
+                        // var_dump($res->fetch_array());
+                        //  $row_id= $res->fetch_array();
+                        //  while () {
+                            $row = $res->fetch_all(MYSQLI_ASSOC);
+                            foreach ($row as $key => $value) {
                     
                         // $grabb = $conn->query("SELECT SUM(amount) as amount FROM donations WHERE drive_id = '".$_GET['id']."'");
                         // while ($don = $grabb->fetch_assoc()) {
@@ -202,7 +198,7 @@ include ("services.php");	 ?>
                                         <span class="tip"></span>
                                     </div><!-- .tipWrap -->
     
-                                    <span class="fill" data-percentage="<?php echo $perc; ?>">
+                                    <span class="fill" data-percentage="'.$perc.'">
     
     
                                     </span>
@@ -214,7 +210,7 @@ include ("services.php");	 ?>
                                     </div><!-- .fund-raised-total -->
     
                                     <div class="fund-raised-goal mt-4">
-                                        Goal: Ksh <?php echo $row["goal"]; ?>
+                                        Goal: Ksh '.$row["goal"].'
                                     </div><!-- .fund-raised-goal -->
                                 </div><!-- .fund-raised-details -->
                             </div><!-- .fund-raised -->

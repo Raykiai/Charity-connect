@@ -27,7 +27,9 @@
 </head>
 <body class="single-page contact-page">
 
-        <?php include ("services.php"); ?>
+        <?php
+         include ("services.php");
+         include ("connection.php"); ?>
 
 <header class="site-header">
   
@@ -92,12 +94,13 @@
 			unset($_SESSION['register_fail']);
 		} ?></label>
 
-                        <input type="text" name="fname" placeholder="First Name ">
-                        <input type="text" name="lname" placeholder="Last Name" >
-						 <input type="text" name="uname" placeholder="Create User Name" >
-						<input type="file" name="pic" placeholder="Profile Picture"  required>
-						 <input type="text" name="lname" placeholder="Country" >
-						 <input type="text" name="lname" placeholder="City" >
+                        <input type="text" name="fname" placeholder="Full Name ">
+                        
+                         <input type="text" name="uname" placeholder="Create User Name" >
+                         <span> <?php echo $_SESSION['ACC']; ?> </span>
+                         <input type="text" name="location" placeholder="Location" >
+						 <input type="text" name="location" placeholder="Country" >
+					
                         <input type="email" name="email" placeholder="Email">
 						<input type="text" name="contact" placeholder="Contact">
                         <input type="password" name="pass" placeholder="Password"  required>

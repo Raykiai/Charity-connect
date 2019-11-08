@@ -67,9 +67,9 @@
 								 <li><a href="organizations.php">Organizations</a></li>
                                 <li class="current-menu-item"><a href="causes.php">Causes</a></li>
 								 <li><a href="events.php">Events</a></li>
-                                <li><a href="portfolio.php">Gallery</a></li>
                                
-                                <li><a href="account.php">Account</a></li>
+                               
+                               
 			
 	              </ul>
                     </nav><!-- .site-navigation -->
@@ -96,22 +96,122 @@
            
    
                 <div class="col-12 col-lg-7">
-                    <form class="contact-form" action="services.php" method="post" >
-<h2 id="donate" style="font_size:17pt;"><ul>Add a donation to this cause.</ul></h2>
-                        <input type="text" name="amount" placeholder="Enter amount to donate" required>
-                        <input type="text" name="comment" placeholder="Leave any comment towards the drive" > 
-						
-					<label>Payment options: </label>	<select name="payment"> 
-						
-			<option>Mpesa</option>
-			<option>Paypal</option>
-			<option>Visa-Card</option>
-		</select>
+                    <form class="contact-form" action="donation.php" method="post" >
+                    
 
-                        <span>
+
+
+<h2 id="donate" style="font_size:17pt;"><ul>Add a donation to this cause.</ul></h2>
+
+
+
+ <?php
+include "connection.php";  
+if($stmt = $conn->query("SELECT * from drives")){
+
+          echo "<select id=name name=drives class='form-control' style='width:540px;'>";
+          while ($row = $stmt->fetch_assoc()) {
+          echo "<option value=$row[drive_id]>$row[name]</option>";
+          }
+          echo "</select>";
+          }else{
+          echo $connection->error;
+          }
+          ?>  
+<?php
+include"connection.php";
+if(isset($_POST["donate"])) {
+
+  $phone_no=$_POST["phone_no"];
+  $total_amt = $_POST["amount"];
+ 
+  $consumerKey = 'NKJ95zH9gOpQi0UFbcbs3wJDCUNg5ToQ'; //Fill with your app Consumer Key
+  $consumerSecret = 'qFpnGZO3R6LwiZlo'; // Fill with your app Secret
+  $headers = ['Content-Type:application/json; charset=utf8'];
+  $myurl = 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials';
+  $curl = curl_init($myurl);
+  curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+  curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+  curl_setopt($curl, CURLOPT_HEADER, FALSE);
+  curl_setopt($curl, CURLOPT_USERPWD, $consumerKey.':'.$consumerSecret);
+  $result = curl_exec($curl);
+  $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+  $result = json_decode($result);
+  $access_token = $result->access_token;
+
+
+  $stkurl = 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest';
+  $curl = curl_init();
+  curl_setopt($curl, CURLOPT_URL, $stkurl);
+  curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/json','Authorization:Bearer ACCESS_TOKEN')); //setting custom header
+  $phone_no =ltrim($phone_no, '0');
+  $localIP = getHostByName(getHostName());
+  $initiate_url = 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest';
+
+  $BusinessShortcode = '174379';
+  $Timestamp = date('YmdHis');
+  $PartyA = '254'.$phone_no;//25491278088
+  $CallBackURL = 'http://'.$localIP.'/glob/admin/callback_url.php';
+  $AccountReference =  'charity Organization ';
+  $TransactionDesc =  'Transaction description ';
+  $Amount = $total_amt;
+  $Passkey = 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919';
+  $Password = base64_encode($BusinessShortcode.$Passkey.$Timestamp);
+
+  $stkheader = ['Content-Type:application/json','Authorization:Bearer '.$access_token];
+  $curl = curl_init();
+  curl_setopt($curl, CURLOPT_URL, $initiate_url);
+  curl_setopt($curl, CURLOPT_HTTPHEADER, $stkheader); //setting custom header
+
+ 
+ 
+  $curl_post_data = array(
+   'BusinessShortCode' => $BusinessShortcode,
+    'Password' => $Password,
+    'Timestamp' => $Timestamp,
+    'TransactionType' => 'CustomerPayBillOnline',
+    'Amount' =>$Amount,
+    'PartyA' => $PartyA,
+    'PartyB' => $BusinessShortcode,
+    'PhoneNumber' => $PartyA,
+    'CallBackURL' => $CallBackURL,
+    'AccountReference' => $AccountReference,
+    'TransactionDesc' => $TransactionDesc
+  );
+ 
+  $data_string = json_encode($curl_post_data);
+ 
+  curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($curl, CURLOPT_POST, true);
+  curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
+ 
+  $curl_response = curl_exec($curl);
+
+ 
+
+$sql = "INSERT INTO donations (user_id, drive_id, amount, comment)
+VALUES ('".$_SESSION['uid']."','".$_POST['drives']."', '".$_POST['amount']."', '".$_POST['comment']."')";
+
+if ($conn->multi_query($sql) === TRUE) {
+  echo '<script>alert("Thank you for donating!!")</script>';
+} else {
+    echo "Error: " . $sql . "<br>" . $conn->error;
+     header("location: cause.php");
+}
+}
+
+$conn->close();
+?>
+<br>
+                       <input type="text" name="amount" placeholder="Enter amount to donate" required>
+                       
+                         <input type="text"  name="phone_no" placeholder="phone number" required>
+                         <input type="text"  name="comment" placeholder="comment" required>
+                           <span>
                             <input class="btn gradient-bg" type="submit" id="donate"  name="donate" value="Donate">
                         	
-						</span>
+                        </span>
+                        
 						        </form><!-- .contact-form -->
 	
                 </div><!-- .col -->

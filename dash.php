@@ -1,13 +1,22 @@
-
 <!doctype html>
 <html lang="en">
   <head>
+<!-- Required meta tags -->
+  
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="css/swiper.min.css">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="dash.css">
+  <link rel="stylesheet" href="css/style2.css">
+
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Jekyll v3.8.5">
-    <title>Dashboard Template · Bootstrap</title>
+    <title>User Dashboard</title>
 
 
     <!-- Bootstrap core CSS -->
@@ -34,12 +43,27 @@
     <link href="dashboard.css" rel="stylesheet">
   </head>
   <body>
-    <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-  <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Company name</a>
-  <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
+  <?php 
+include ("connection.php");
+include ("services.php");
+	 ?>
+    <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow   nav-top">
+  <a class="navbar-brand col-sm-3 col-md-2 mr-0" ><p style="color:antiquewhite;">  <?php 
+				if (isset($_SESSION['user'])) {
+                    echo $_SESSION['user'];
+                }
+                else{
+                  $_SESSION['sign_in'] = "You are not logged in!";
+                  header("location: login.php");
+                }
+                 ?></p> </a>
   <ul class="navbar-nav px-3">
-    <li class="nav-item text-nowrap">
-      <a class="nav-link" href="#">Sign out</a>
+  <li class="nav-item text-nowrap" style="display:inline;">
+      <a class="nav-link" href="index.php" style="display:inline">Home</a>
+    </li>
+  
+    <li class="nav-item text-nowrap" style="display:inline">
+      <a class="nav-link" href="services.php?out=y" style="display:inline">Sign out</a>
     </li>
   </ul>
 </nav>
@@ -50,120 +74,76 @@
       <div class="sidebar-sticky">
         <ul class="nav flex-column">
           <li class="nav-item">
-            <a class="nav-link active" href="#">
-              <span data-feather="home"></span>
-              Dashboard <span class="sr-only">(current)</span>
+            <a class="nav-link active" href="dash.php">
+              <br>
+            
+              Profile <span class="sr-only">(current)</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="file"></span>
-              Orders
+            <a class="nav-link" href="dash_org.php">
+       
+              Organizations
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="shopping-cart"></span>
-              Products
+            <a class="nav-link" href="dash_cause.php">
+           
+              Causes
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="users"></span>
-              Customers
+            <a class="nav-link" href="dash_event.php">
+          
+              Events
             </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="bar-chart-2"></span>
-              Reports
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="layers"></span>
-              Integrations
-            </a>
-          </li>
-        </ul>
-
-        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-          <span>Saved reports</span>
-          <a class="d-flex align-items-center text-muted" href="#">
-            <span data-feather="plus-circle"></span>
-          </a>
-        </h6>
-        <ul class="nav flex-column mb-2">
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="file-text"></span>
-              Current month
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="file-text"></span>
-              Last quarter
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="file-text"></span>
-              Social engagement
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="file-text"></span>
-              Year-end sale
-            </a>
-          </li>
+                   
         </ul>
       </div>
     </nav>
 
     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Dashboard</h1>
-        <div class="btn-toolbar mb-2 mb-md-0">
-          <div class="btn-group mr-2">
-            <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-            <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
-          </div>
-          <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-            <span data-feather="calendar"></span>
-            This week
-          </button>
-        </div>
+        <h1 class="h2">User Profile</h1>
+        
       </div>
+      <div class="col-12 col-lg-6">
+      <?php 
 
-      <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
+$result = $conn->query("SELECT * FROM users WHERE user_id= '".$_SESSION['uid']."' ");
 
-      <h2>Section title</h2>
-      <div class="table-responsive">
-        <table class="table table-striped table-sm">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Header</th>
-              <th>Header</th>
-              <th>Header</th>
-              <th>Header</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>1,001</td>
-              <td>Lorem</td>
-              <td>ipsum</td>
-              <td>dolor</td>
-              <td>sit</td>
-            </tr>
-           
-           
-          </tbody>
-        </table>
-      </div>
+
+    if ($myrow = mysqli_fetch_array($result)){
+      
+$sql="SELECT  fname, location, uname, pic, email, contact, date_created FROM users WHERE user_id = '". $myrow['user_id']."' ";
+$user = $conn->query($sql);
+$row = $user->fetch_assoc();
+    }
+    
+    
+?>
+    
+      
+<div class="profile">
+<div class="text-center">
+
+ <?php echo '<img src='.$row['pic'].' class="rounded" >' ?>
+<br>
+
+<div class="content"><label> User Name:</label>   <span class="user" ><?php echo $row['uname'] ?></span></div>
+<div class="content"><label> Location:</label>   <span class="user" ><?php echo $row['location'] ?></span></div>
+<div class="content"><label> Email:</label>   <span class="user" ><?php echo $row['email'] ?></span></div>
+<div class="content"><label> Contact:</label>   <span class="user" ><?php echo $row['contact'] ?></span></div>
+<div class="content"><label> Date of account creation:</label>   <span class="user" ><?php echo $row['date_created'] ?></span></div>
+
+</div>
+<div class="user_info" >
+
+
+</div>
+    
+              </div>
     </main>
   </div>
 </div>
