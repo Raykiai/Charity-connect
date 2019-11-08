@@ -46,10 +46,11 @@ include ("services.php");
                     <a style="float: right;" href="dash.php"><?php 
 				if (isset($_SESSION['user'])) {
                     echo "Logged in : ".$_SESSION['user'];
+                  
                 }
                 else{
-                    echo "No User Logged in";
-                }
+                    echo "Log in";
+                  }
                  ?></a>
                
                     </div><!-- .donate-btn -->
@@ -101,7 +102,11 @@ include ("services.php");
         </div><!-- .container -->
     </div><!--  .page-header -->
 
-    <?php 
+    
+    <div class="featured-cause">
+        <div class="container">
+                        <div class="row">
+<?php 
 
 $result = $conn->query("SELECT * FROM drives WHERE drive_id ");
 while ($myrow = $result->fetch_assoc()){
@@ -118,15 +123,12 @@ while ($myrow = $result->fetch_assoc()){
 
     
 ?>
-    <div class="featured-cause">
-        <div class="container">
-                        <div class="row">
-
                 <div class="col-12 col-lg-6">
                     <div class="cause-wrap d-flex flex-wrap justify-content-between">
                         <figure class="m-0">
                     <!--    <img src="images/g.jpg" alt=""/> -->
-                    <?php     echo "<img src=\"".$row['image']."\">"; ?>
+                  <?php echo ' <img src="http://localhost/thecharity/uploads/'.$row['image'].'">;' ?>
+                 
                         </figure>
                     
                         <div class="cause-content-wrap">
@@ -143,23 +145,19 @@ while ($myrow = $result->fetch_assoc()){
                             <div class="entry-content">
                                 <p class="m-0"><?php echo $row["description"]; ?></p>
                             </div><!-- .entry-content -->
-
-                            <div class="entry-footer mt-5">
-                                <a href="donation.php" class="btn gradient-bg mr-2">Donate Now</a>
-                            </div><!-- .entry-footer -->
+                         
+                           
                         </div><!-- .cause-content-wrap -->
+                        <div >
+                                     <ul class="tabs-nav d-flex" style="height:100px; " >
+                                    <li class="tab-nav d-flex justify-content-center align-items-center" data-target="#tab_1"  style=><?php echo $perc; ?>%</li>
+                                    </ul>                
+    </div>
 
                         <div class="fund-raised w-100">
-                            <div class="featured-fund-raised-bar barfiller">
-                                <div class="tipWrap">
-                                    <span class="tip"></span>
-                                </div><!-- .tipWrap -->
-
- <span class="fill" data-percentage="
-<?php echo $perc; ?>
-"  > </span>
-                              
-                            </div><!-- .fund-raised-bar -->
+                           
+                                   
+                                   
 
                             <div class="fund-raised-details d-flex flex-wrap justify-content-between align-items-center">
                                 <div class="fund-raised-total mt-4">
@@ -175,24 +173,29 @@ while ($myrow = $result->fetch_assoc()){
 
                                 <div class="fund-raised-goal mt-4">
                                     Goal: Ksh <?php echo $row["goal"]; ?>
+
+                                    
                                 </div><!-- .fund-raised-goal -->
-                            </div><!-- .fund-raised-details -->
+                                
+                            </div><!-- .fund-raised-details --> <div class="entry-footer mt-5">
+                                <a href="donation.php" class="btn gradient-bg mr-2">Donate Now</a>
+                            </div><!-- .entry-footer -->
                         </div><!-- .fund-raised -->
                     </div><!-- .cause-wrap -->
                 </div><!-- .col -->
-				
-            </div><!-- .row -->
-        </div><!-- .container -->
-    </div><!-- .featured-cause -->
-
- 
-    <?php
+				 <?php
 }
 $conn->close();
       
 
 
 ?>
+            </div><!-- .row -->
+        </div><!-- .container -->
+    </div><!-- .featured-cause -->
+
+ 
+   
 		
         </div><!-- .row -->
         </div><!-- .container -->
