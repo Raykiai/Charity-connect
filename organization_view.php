@@ -97,7 +97,7 @@ include ("services.php");	 ?>
                                 <li><a href="causes.php">Causes</a></li>
 								 <li><a href="events.php">Events</a></li>
                                 
-                                <li><a href="account.php">Account</a></li>
+                             
 			
 	              </ul>
 				    </nav><!-- .site-navigation -->

@@ -139,7 +139,7 @@ if(isset($_POST["donate"])) {
   $result = json_decode($result);
   $access_token = $result->access_token;
 
-
+  
   $stkurl = 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest';
   $curl = curl_init();
   curl_setopt($curl, CURLOPT_URL, $stkurl);

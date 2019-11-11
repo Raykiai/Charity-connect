@@ -51,6 +51,7 @@ include ("services.php");
   <a class="navbar-brand col-sm-3 col-md-2 mr-0" ><p style="color:antiquewhite;">  <?php 
 				if (isset($_SESSION['user'])) {
                     echo $_SESSION['user'];
+                    $_SESSION['uid'];
                 }
                 else{
                   $_SESSION['sign_in'] = "You are not logged in!";
@@ -58,13 +59,11 @@ include ("services.php");
                 }
                  ?></p> </a>
   <ul class="navbar-nav px-3">
-  <li class="nav-item text-nowrap" style="display:inline;">
-      <a class="nav-link" href="index.php" style="display:inline">Home</a>
+  <li class="nav-item text-nowrap" >
+      <a class="nav-link" href="index.php" >Home</a>
     </li>
   
-    <li class="nav-item text-nowrap" style="display:inline">
-      <a class="nav-link" href="services.php?out=y" style="display:inline">Sign out</a>
-    </li>
+   
   </ul>
 </nav>
 
@@ -98,7 +97,12 @@ include ("services.php");
               Events
             </a>
           </li>
-                   
+          <li class="nav-item">
+            <a class="nav-link" href="services.php?out=y">
+          
+              Log Out
+            </a>
+          </li>      
         </ul>
       </div>
     </nav>
@@ -111,15 +115,11 @@ include ("services.php");
       <div class="col-12 col-lg-6">
       <?php 
 
-$result = $conn->query("SELECT * FROM users WHERE user_id= '".$_SESSION['uid']."' ");
-
-
-    if ($myrow = mysqli_fetch_array($result)){
       
-$sql="SELECT  fname, location, uname, pic, email, contact, date_created FROM users WHERE user_id = '". $myrow['user_id']."' ";
+$sql="SELECT  fname, location, country, uname, email, contact, date_created FROM users WHERE user_id = '".$_SESSION['uid']."' ";
 $user = $conn->query($sql);
 $row = $user->fetch_assoc();
-    }
+    
     
     
 ?>
@@ -127,10 +127,7 @@ $row = $user->fetch_assoc();
       
 <div class="profile">
 <div class="text-center">
-
- <?php echo '<img src='.$row['pic'].' class="rounded" >' ?>
-<br>
-
+<BR><BR>
 <div class="content"><label> User Name:</label>   <span class="user" ><?php echo $row['uname'] ?></span></div>
 <div class="content"><label> Location:</label>   <span class="user" ><?php echo $row['location'] ?></span></div>
 <div class="content"><label> Email:</label>   <span class="user" ><?php echo $row['email'] ?></span></div>

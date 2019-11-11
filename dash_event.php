@@ -74,13 +74,10 @@ include ("services.php");
                 }
                  ?></p> </a>
   <ul class="navbar-nav px-3">
-  <li class="nav-item text-nowrap" style="display:inline;">
-      <a class="nav-link" href="index.php" style="display:inline">Home</a>
+  <li class="nav-item text-nowrap" >
+      <a class="nav-link" href="index.php" style=" font_size:15pt;">Home</a>
     </li>
   
-    <li class="nav-item text-nowrap" style="display:inline">
-      <a class="nav-link" href="services.php?out=y" style="display:inline">Sign out</a>
-    </li>
   </ul>
 </nav>
 
@@ -114,7 +111,12 @@ include ("services.php");
               Events
             </a>
           </li>
-                   
+          <li class="nav-item">
+            <a class="nav-link" href="services.php?out=y">
+          
+              Log Out
+            </a>
+          </li>      
         </ul>
       </div>
     </nav>
@@ -141,7 +143,7 @@ include ("services.php");
                         unset($_SESSION['event_fail']);
                     } ?>
 
-                                    <input type="text" name="name" placeholder="Name your events ">
+                                    <input type="text" name="name" placeholder="Name your events " required>
                                     <input type="file" name="image" placeholder="Add an Image"  required>
 
                                      <span> Organization responsible:</span>	
@@ -171,12 +173,12 @@ include ("services.php");
 
                    </select>
                         
-                        <input type="text" name="description" placeholder="Give a brief description" >
-						 <input type="text" name="country" placeholder="Country" >
-                         <input type="text" name="city" placeholder="City" >
-                         <input type="text" name="location" placeholder="Specify event location" >
-					     <input type="date" name="date_event" placeholder="Date of the event">
-						 <input type="email" name="email" placeholder="Email">
+                        <input type="text" name="description" placeholder="Give a brief description" required>
+						 <input type="text" name="country" placeholder="Country" required>
+                         <input type="text" name="city" placeholder="City" required>
+                         <input type="text" name="location" placeholder="Specify event location"required>
+					     <input type="date" name="date_event" placeholder="Date of the event" required>
+						 <input type="email" name="email" placeholder="Email" required>
                        
                         <span>
                             <input class="btn gradient-bg" type="submit" id="signup"  name="add_event" value="Submit details">
@@ -190,15 +192,22 @@ include ("services.php");
       <div class="card border-warning mb-3" style="width: 100%;">
   <div class="card-header">My Events</div>
     <div class="card-body">
-
-           <?php
+  
+        <?php
             include "connection.php";
-            $sql="SELECT name, description, country, city, location, date_event, email FROM events where user_id='".$_SESSION['uid']."'";
-
+            $sql="SELECT event_id, name, description, country, city, location, date_event, email FROM events where user_id ='".$_SESSION['uid']."'";
+           
             $result = $conn->query($sql);
+
+            if (isset($_SESSION['del_con'])) {
+              echo "<p style='color:#6f42c1; font-size:16pt;'>".$_SESSION['del_con']."<p>";
+              unset($_SESSION['del_con']);
+              die();
+            }
 
             if($result = mysqli_query($conn, $sql)){
                 if(mysqli_num_rows($result) > 0){
+
                    echo '<table class="table table-hover">';
                         echo "<tr>";
                             echo'<th scope="col">name</th>';
@@ -219,7 +228,7 @@ include ("services.php");
                             echo '<td scope="row">' . $row['description'] . "</td>";
                             echo '<td scope="row">' . $row['email'] . "</td>";
                             echo '<td scope="row">' . $row['date_event'] . "</td>";
-
+                         echo  "<td '><a href='services.php?del_data=".$row['event_id']."'>REMOVE</a></td>";
                         echo "</tr>";
                     // Free result set
                     }

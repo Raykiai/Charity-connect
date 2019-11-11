@@ -34,38 +34,6 @@
 <header class="site-header">
   
 
-    <div class="nav-bar">
-        <div class="container">
-            <div class="row">
-                <div class="col-12 d-flex flex-wrap justify-content-between align-items-center">
-                    <div class="site-branding d-flex align-items-center">
-                        <a class="d-block" href="index.php" rel="home"><img class="d-block" src="images/logo.png" alt="logo"></a>
-                    </div><!-- .site-branding -->
-
-                    <nav class="site-navigation d-flex justify-content-end align-items-center">
-                       <ul class="d-flex flex-column flex-lg-row justify-content-lg-end align-content-center">
-                                <li ><a href="index.php">Home</a></li>
-                                <li ><a href="about.php">About us</a></li>
-								 <li><a href="organizations.php">Organizations</a></li>
-                                <li><a href="causes.php">Causes</a></li>
-								 <li><a href="events.php">Events</a></li>
-                                <li><a href="portfolio.php">Gallery</a></li>
-                                
-								
-                                <li class="current-menu-item"><a href="account.php">Account</a></li>
-                            </ul>
-                    </nav><!-- .site-navigation -->
-
-                    <div class="hamburger-menu d-lg-none">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </div><!-- .hamburger-menu -->
-                </div><!-- .col -->
-            </div><!-- .row -->
-        </div><!-- .container -->
-    </div><!-- .nav-bar -->
 </header><!-- .site-header -->
 
     <div class="page-header">
@@ -84,23 +52,20 @@
                 
 
                 <div class="col-12 col-lg-7">
-                    <form class="contact-form" action="services.php" method="post" >
-<label style="color: green"><?php if (isset($_SESSION['register_con'])) {
-			echo $_SESSION['register_con']."<br><br>";
-			unset($_SESSION['register_con']);
-		} ?></label>
-		<label style="color: red"><?php if (isset($_SESSION['register_fail'])) {
-			echo $_SESSION['register_fail']."<br><br>";
-			unset($_SESSION['register_fail']);
-		} ?></label>
+                                    <form class="contact-form" action="services.php" method="post" >
+                <label style="color: green"><?php if (isset($_SESSION['register_con'])) {
+                            echo $_SESSION['register_con']."<br><br>";
+                            unset($_SESSION['register_con']);
+                        } ?></label>
+                        <label style="color: red"><?php if (isset($_SESSION['register_fail'])) {
+                            echo $_SESSION['register_fail']."<br><br>";
+                            unset($_SESSION['register_fail']);
+                        } ?></label>
 
                         <input type="text" name="fname" placeholder="Full Name ">
-                        
                          <input type="text" name="uname" placeholder="Create User Name" >
-                         <span> <?php echo $_SESSION['ACC']; ?> </span>
+                       <input type="text" name="country" placeholder="Country" >
                          <input type="text" name="location" placeholder="Location" >
-						 <input type="text" name="location" placeholder="Country" >
-					
                         <input type="email" name="email" placeholder="Email">
 						<input type="text" name="contact" placeholder="Contact">
                         <input type="password" name="pass" placeholder="Password"  required>

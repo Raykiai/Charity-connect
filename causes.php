@@ -76,7 +76,6 @@ include ("services.php");
 								 <li><a href="events.php">Events</a></li>
                           
                                
-                                <li><a href="account.php">Account</a></li>
                         </ul>
                     </nav><!-- .site-navigation -->
 
@@ -178,7 +177,8 @@ while ($myrow = $result->fetch_assoc()){
                                 </div><!-- .fund-raised-goal -->
                                 
                             </div><!-- .fund-raised-details --> <div class="entry-footer mt-5">
-                                <a href="donation.php" class="btn gradient-bg mr-2">Donate Now</a>
+                               
+                                <a class="btn gradient-bg mr-2" href="services.php?donate=<?php echo $row['drive_id'] ?>">Donate</a>
                             </div><!-- .entry-footer -->
                         </div><!-- .fund-raised -->
                     </div><!-- .cause-wrap -->

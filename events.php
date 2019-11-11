@@ -73,8 +73,7 @@
 								 <li><a href="organizations.php">Organizations</a></li>
                                 <li><a href="causes.php">Causes</a></li>
 								 <li class="current-menu-item"><a href="events.php">Events</a></li>
-                                 <li><a href="account.php">Account</a></li>
-			
+                               
 	              </ul>
 						
 							
@@ -132,22 +131,22 @@ if($result = mysqli_query($conn, $sql)){
     <div class="news-wrap">
         <div class="container">
             <div class="row">
-                <div class="col-12 col-lg-8">
+               <div style="max-width:700px; min-width:600px;">
                     <div class="news-content">
-                        <a>  <?php echo ' <img src="http://localhost/thecharity/uploads/'.$row['image'].'">;' ?>
-         </a>
+                       <?php echo ' <img style=" max-height:350px; min-height:270px; " src="http://localhost/thecharity/uploads/'.$row['image'].'">;' ?>
+       
                         <header class="entry-header d-flex flex-wrap justify-content-between align-items-center">
                             <div class="header-elements">
-                                <div class="posted-date"><?php echo $row["date_event"]; ?></div>
+                                <div class="posted-date" style="font-size:13pt;"><?php echo $row["date_event"]; ?></div>
                   
 
-                                <h2 class="entry-title"><a ><?php echo $row["name"]; ?></a></h2>
+                                <h2 class="entry-title" style="font-size:20pt;"><a ><?php echo $row["name"]; ?></a></h2>
 
                                 <div class="post-metas d-flex flex-wrap align-items-center">
-                                    <span class="post-author"> <a ><?php echo $row["country"]; ?></a></span>
-                                    <span class="post-comments"><a ><?php echo $row["city"]; ?></a></span>
-                                    <span class="post-comments"><a >Location</a></span>
-                                    <span class="post-comments">Contact: <a ><?php echo $row["email"]; ?></a></span>
+                                    <span class="post-author"> <a style="font-size:13pt;"><?php echo $row["country"]; ?></a></span>
+                                    <span class="post-comments"><a style="font-size:13pt;"><?php echo $row["city"]; ?></a></span>
+                                    <span class="post-comments"><a style="font-size:13pt;">Location <?php echo $row['location'];?></a></span>
+                                    <span class="post-comments"> <a style="font-size:13pt;">Contact: <?php echo $row["email"]; ?></a></span>
                                 </div>
                             </div>
 
@@ -155,7 +154,7 @@ if($result = mysqli_query($conn, $sql)){
                         </header>
 
                         <div class="entry-content">
-                    <p><?php echo $row["description"]; ?></p>       
+                    <p style="font-size:14pt; color:black;" ><?php echo $row["description"]; ?></p>       
                     </div>
                   
                     <?php
@@ -180,10 +179,10 @@ $conn->close();
 ?>
 
                        
-                    </div>
+             
 
                                     </div><!-- .col -->
-            </div>
+</div>
         </div>
     </div>
 

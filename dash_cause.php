@@ -78,9 +78,7 @@ include ("services.php");
       <a class="nav-link" href="index.php" style="display:inline">Home</a>
     </li>
   
-    <li class="nav-item text-nowrap" style="display:inline">
-      <a class="nav-link" href="services.php?out=y" style="display:inline">Sign out</a>
-    </li>
+   
   </ul>
 </nav>
 
@@ -114,7 +112,12 @@ include ("services.php");
               Events
             </a>
           </li>
-                   
+          <li class="nav-item">
+            <a class="nav-link" href="services.php?out=y">
+          
+              Log Out
+            </a>
+          </li>      
         </ul>
       </div>
     </nav>
@@ -189,37 +192,75 @@ include ("services.php");
     <div class="card-body">
  <?php
 include "connection.php";
-$sql="SELECT name, goal, description FROM drives where user_id = '".$_SESSION['uid']."'";
+
+$sql="SELECT drive_id, name, goal, description FROM drives where user_id = '".$_SESSION['uid']."'";
 $result = $conn->query($sql);
+if (isset($_SESSION['del_cause'])) {
+  echo "<p style='color:#6f42c1; font-size:16pt;'>".$_SESSION['del_con']."<p>";
+  unset($_SESSION['del_con']);
+  die();
+}
+
+
+
+
+
+$result = $conn->query("SELECT * FROM drives WHERE drive_id ");
+
+
 
 if($result = mysqli_query($conn, $sql)){
     if(mysqli_num_rows($result) > 0){
+
        echo '<table class="table table-hover">';
             echo "<tr>";
                 echo'<th scope="col">Name</th>';
                 echo'<th scope="col">Goal</th>';
+                echo'<th scope="col">Raised</th>';
                 echo'<th scope="col">Description</th>';
             echo "</tr>";
          while($row = mysqli_fetch_array($result)){
+
+  $grabb = $conn->query("SELECT SUM(amount) as amount FROM donations WHERE drive_id = '".$row['drive_id']."'");
+    $don = $grabb->fetch_assoc();
+    $total=0;
+    $total = $total+ $don['amount'];
+
+
+
+
      echo '<tbody>';
          echo '<tr>';
                 echo '<td scope="row">' . $row['name'] . "</td>";
                 echo '<td scope="row">' . $row['goal'] . "</td>";
+                echo '<td scope="row">' . $total . "</td>";
                 echo '<td scope="row">' . $row['description'] . "</td>";
-
+                echo  "<td '><a href='services.php?del_cause=".$row['drive_id']."'>REMOVE</a></td>";
+                       
             echo "</tr>";
         // Free result set
+        
         }
         echo "</table>";
         mysqli_free_result($result);
 
-    } else{
+   } else{
         echo "No records matching your query were found.";
     }
-} else{
+
+} 
+
+
+
+else{
     echo "There are no drives to display $sql. " . mysqli_error($conn);
 }
+
+  
+
 $conn->close();
+
+
 ?>
     </div>
   </div>

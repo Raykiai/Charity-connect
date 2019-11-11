@@ -78,9 +78,7 @@ include ("services.php");
       <a class="nav-link" href="index.php" style="display:inline">Home</a>
     </li>
   
-    <li class="nav-item text-nowrap" style="display:inline">
-      <a class="nav-link" href="services.php?out=y" style="display:inline">Sign out</a>
-    </li>
+   
   </ul>
 </nav>
 
@@ -114,7 +112,12 @@ include ("services.php");
               Events
             </a>
           </li>
-                   
+          <li class="nav-item">
+            <a class="nav-link" href="services.php?out=y">
+          
+              Log Out
+            </a>
+          </li>   
         </ul>
       </div>
     </nav>

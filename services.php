@@ -6,44 +6,19 @@ session_start();
 #REGISTER CODE USERS...
 
 if (isset($_POST['signup'])) {
-	$passwd= $_POST['pass'];
+	$pass= $_POST['pass'];
+	$passwd=md5($pass);
 	$confirm= $_POST['confirm_pass'];
-
-	$sql = "SELECT user_id FROM users WHERE username == '".$_POST['uname']."'";
-       
-	if($stmt = mysqli_prepare($link, $sql)){
-		// Bind variables to the prepared statement as parameters
-		mysqli_stmt_bind_param($stmt, "s", $param_username);
-	   
-		// Set parameters
-		$param_username = trim($_POST["uname"]);
-	   
-		// Attempt to execute the prepared statement
-		if(mysqli_stmt_execute($stmt)){
-			/* store result */
-			mysqli_stmt_store_result($stmt);
-		   
-			if(mysqli_stmt_num_rows($stmt) == 1){
-				$_SESSION['ACC'] = "This username is already taken.";
-			} else{
-				$username = trim($_POST["uname"]);
-			}
-		} else{
-			echo "Oops! Something went wrong. Please try again later.";
-		}
-	}
-
-
 
 
 	if ($passwd == $confirm) {
-		$sql= "INSERT INTO users (fname, lname, uname, pic, email, contact, pass)
-		 VALUES (".$_POST['fname']."','".$_POST['lname']."','".$_POST['uname']."','".$_POST['pic']."','".$_POST['email']."','".$_POST['contact']."','".$passwd."')";
+		$sql= "INSERT INTO users (fname, location, uname, country, email, contact, pass)
+		 VALUES ('".$_POST['fname']."','".$_POST['uname']."','".$_POST['country']."','".$_POST['location']."','".$_POST['email']."','".$_POST['contact']."','".$passwd."')";
 
 		if ($conn->query($sql) == TRUE) {
 			$_SESSION['register_con'] = "Successful Proceed to Login! ";
 			header("location: signup.php");
-		
+			echo "register_con";
 			die();
 		}
 	}
@@ -55,6 +30,7 @@ if (isset($_POST['signup'])) {
 	$conn-> close();
 	   
 }
+
 
 #LOGIN CODE...
 
@@ -103,7 +79,7 @@ if (isset($_POST['login'])) {
 if (isset($_GET['out'])) {
 	unset($_SESSION['user']);
 unset($_SESSION['role_id']);
-	header("location: login.php");
+	header("location: index.php");
 }
 
 #ADD ORGANIZATION
@@ -145,42 +121,14 @@ if (isset($_POST["add_event"])) {
 
 	  $sql = "SELECT id FROM users WHERE username = ?";
        
-        if($stmt = mysqli_prepare($link, $sql)){
-            // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "s", $param_username);
-           
-            // Set parameters
-            $param_username = trim($_POST["username"]);
-           
-            // Attempt to execute the prepared statement
-            if(mysqli_stmt_execute($stmt)){
-                /* store result */
-                mysqli_stmt_store_result($stmt);
-               
-                if(mysqli_stmt_num_rows($stmt) == 1){
-                    $username_err = "This username is already taken.";
-                } else{
-                    $username = trim($_POST["username"]);
-                }
-            } else{
-                echo "Oops! Something went wrong. Please try again later.";
-            }
-        }
-
-
-	 
-	
-
-
-
-	 $sql = "INSERT INTO events (user_id, organization_id, name, image, description, country, city, location, date_event, email) 
+     $sql = "INSERT INTO events (user_id, organization_id, name, image, description, country, city, location, date_event, email) 
 	 VALUES ('".$_SESSION['uid']."','".$_POST['organization_id']."', '".$_POST['name']."','".$_FILES['image']['name']."', '".$_POST['description']."', '".$_POST['country']."', '".$_POST['city']."', '".$_POST['location']."', '".$_POST['date_event']."', '".$_POST['email']."' )";
 	
 	if ($conn->multi_query($sql) === TRUE) {
 		if (move_uploaded_file($_FILES['image']['tmp_name'], $target)) {
 					$msg = "Image uploaded successfully";
 					
-					$_SESSION['event_con'] = "organization added successfully";
+					$_SESSION['event_con'] = "Event added successfully";
 					header("location: dash_event.php");
 				}else{
 					$_SESSION['event_fail'] = "Image was not uploaded";
@@ -197,6 +145,29 @@ if (isset($_POST["add_event"])) {
 	$conn->close();
 	}
 	
+#DELETE EVENT
+
+if (isset($_GET['del_data'])) {
+	$sql= "DELETE FROM events WHERE event_id= '".$_GET['del_data']."'";
+	$deleted = $conn->query($sql);
+	$_SESSION['del_con'] = "Event removed";
+	header("location: dash_event.php");
+	$conn->close();
+	die();
+}
+
+#DELETE CAUSE
+
+
+if (isset($_GET['del_cause'])) {
+	$sql= "DELETE FROM drives WHERE drive_id= '".$_GET['del_cause']."'";
+	$deleted = $conn->query($sql);
+	$_SESSION['del_con'] = "Cause removed";
+	header("location: dash_cause.php");
+	$conn->close();
+	die();
+}
+
 
 #ADD CAUSE
 
@@ -213,7 +184,7 @@ if (isset($_POST["add_cause"])) {
    if ($conn->multi_query($sql) === TRUE) {
 	   if (move_uploaded_file($_FILES['image']['tmp_name'], $target)) {
 				   $msg = "Image uploaded successfully";
-				   $_SESSION['cause_con'] = "Event added successfully";
+				   $_SESSION['cause_con'] = "Cause added successfully";
 				  
 				   header("location: dash_cause.php");
 			   }else{
@@ -229,13 +200,52 @@ if (isset($_POST["add_cause"])) {
    }
 
 
+#LEADS USER TO DONATION FORM
+$drive = $conn->query("SELECT * FROM drives WHERE drive_id");
+$gain = $drive->fetch_assoc();
+		$id= $gain['drive_id'];
+$_GET['drive_id'] = $gain['drive_id'];
+
+   if (isset($_GET['donate'])) {
+	if (isset($_GET['drive_id']) && $_GET['drive_id'] == $gain['drive_id']) {
+		
+		header("location: donation.php");
+		die();
+	}
+	else{
+		$_SESSION['sign_in'] = "You are not logged in!";
+		header("location: login.php");
+	}
+}
 
 
-#PRESENT ORGANIZATION DATA IN ORGANIZATION_VIEW
-$org = $conn->query("SELECT * FROM organizations WHERE organization_id");
-		$gain = $org->fetch_assoc();
-		$id= $gain['organization_id'];
-$_SESSION['organization'] = $gain['organization_id'];
+// #PRESENT ORGANIZATION DATA IN ORGANIZATION_VIEW
+// $org = $conn->query("SELECT * FROM organizations WHERE organization_id");
+// 		$gain = $org->fetch_assoc();
+// 		$id= $gain['organization_id'];
+// $_SESSION['organization'] = $gain['organization_id'];
+
+
+// if (isset($_GET['org_view'])) {
+// 	if (isset($_GET['organization_id']) && $_GET['organization_id'] == $_SESSION['organization']) {
+		
+// header("location: organization_view.php");
+// die();
+// 	}
+// 	else{
+// 		$_SESSION['display_fail']="Error occurred!";
+// 		header("location: organizations.php");
+// 		die();
+// 	}
+// 	$conn->close();
+// }
+
+
+// #PRESENT ORGANIZATION DATA IN ORGANIZATION_VIEW
+// $org = $conn->query("SELECT * FROM organizations WHERE organization_id");
+// 		$gain = $org->fetch_assoc();
+// 		$id= $gain['organization_id'];
+// $_SESSION['organization'] = $gain['organization_id'];
 
 
 // if (isset($_GET['organization_id'])) {

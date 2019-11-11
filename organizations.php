@@ -32,7 +32,8 @@
     <?php
     include ("connection.php");
     include ("services.php");	 ?>
-<header class="site-header"><div class="top-header-bar">
+<header class="site-header">
+    <div class="top-header-bar">
         <div class="container">
             <div class="row flex-wrap justify-content-center justify-content-lg-between align-items-lg-center">
                 <div class="col-12 col-lg-8 d-none d-md-flex flex-wrap justify-content-center justify-content-lg-start mb-3 mb-lg-0">
@@ -78,8 +79,7 @@
                                 <li><a href="causes.php">Causes</a></li>
 								 <li><a href="events.php">Events</a></li>
                            
-                               
-                                <li><a href="account.php">Account</a></li>
+                             
 			
 	              </ul>
 						

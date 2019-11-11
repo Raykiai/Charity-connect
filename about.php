@@ -25,9 +25,39 @@
     <!-- Styles -->
     <link rel="stylesheet" href="style.css">
 </head>
+<?php 
+include ("connection.php");
+include ("services.php");
+	 ?>
 <body class="single-page about-page">
 <header class="site-header">
-   
+<div class="top-header-bar">
+        <div class="container">
+            <div class="row flex-wrap justify-content-center justify-content-lg-between align-items-lg-center">
+                <div class="col-12 col-lg-8 d-none d-md-flex flex-wrap justify-content-center justify-content-lg-start mb-3 mb-lg-0">
+                  
+                </div><!-- .col -->
+
+                <div class="col-12 col-lg-4 d-flex flex-wrap justify-content-center justify-content-lg-end align-items-center">
+                    <div class="donate-btn">
+                       
+                        <a style="float: right;" href="dash.php"><?php 
+				if (isset($_SESSION['user'])) {
+                    echo "Logged in : ".$_SESSION['user'];
+                  
+                }
+                else{
+                    echo "Log in";
+                }
+                 ?></a>
+                 
+                 
+                 
+                    </div><!-- .donate-btn -->
+                </div><!-- .col -->
+            </div><!-- .row -->
+        </div><!-- .container -->
+    </div><!-- .top-header-bar -->
     <div class="nav-bar">
         <div class="container">
             <div class="row">
@@ -45,7 +75,6 @@
 								 <li><a href="events.php">Events</a></li>
                               
                                
-                                <li><a href="account.php">Account</a></li>
 			
 	              </ul>
 						
